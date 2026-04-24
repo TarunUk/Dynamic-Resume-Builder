@@ -229,3 +229,4 @@ C:\Users\asus\source\repos\Resume-Builder\Resume-Builder\obj\Debug\net8.0\refint
 C:\Users\asus\source\repos\Resume-Builder\Resume-Builder\obj\Debug\net8.0\Resume-Builder.pdb
 C:\Users\asus\source\repos\Resume-Builder\Resume-Builder\obj\Debug\net8.0\Resume-Builder.genruntimeconfig.cache
 C:\Users\asus\source\repos\Resume-Builder\Resume-Builder\obj\Debug\net8.0\ref\Resume-Builder.dll
+C:\Users\asus\source\repos\Resume-Builder\Resume-Builder\obj\Debug\net8.0\Resume-Builder.sourcelink.json
