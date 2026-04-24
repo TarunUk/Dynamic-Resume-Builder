@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "About";
+}
+
+<style>
+    :root {
+        --primary: #7C3AED;
+        --primary-light: #a78bfa;
+        --bg: #F1F5F9;
+        --text-dark: #1E293B;
+        --text-muted: #64748B;
+        --border: #E2E8F0;
+        --shadow: 0 4px 24px rgba(124,58,237,0.07);
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+    }
+
+    .about-wrap {
+        max-width: 700px;
+        margin: 48px auto;
+        padding: 0 16px;
+    }
+
+    .about-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 40px;
+    }
+
+        .about-card h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .about-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+    .tech-badge {
+        display: inline-block;
+        background: #EDE9FE;
+        color: var(--primary);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        margin: 4px;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        border-radius: 10px;
+        background: var(--primary);
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        margin-top: 28px;
+    }
+</style>
+
+<div class="about-wrap">
+    <div class="about-card">
+
+        <h2>Resume Builder Pro</h2>
+        <p>Version 1.0.0 &nbsp;|&nbsp; Built as a learning project</p>
+
+        <hr style="border-color: var(--border); margin: 24px 0;" />
+
+        <h5 style="color: var(--text-dark); margin-bottom: 10px;">What is this?</h5>
+        <p>
+            A free, step-by-step resume builder that lets you fill in your details,
+            choose from 15 professional templates, and download a polished PDF —
+            all without creating an account.
+        </p>
+
+        <h5 style="color: var(--text-dark); margin: 24px 0 10px;">Built with</h5>
+        <div>
+            <span class="tech-badge"><i class="fa-brands fa-microsoft me-1"></i> ASP.NET Core MVC</span>
+            <span class="tech-badge">C# 12</span>
+            <span class="tech-badge">Bootstrap 5</span>
+            <span class="tech-badge">Font Awesome 6</span>
+            <span class="tech-badge">Google Fonts</span>
+        </div>
+
+        <a asp-controller="Home" asp-action="Index" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </a>
+
+    </div>
+</div>

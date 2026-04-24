@@ -1,0 +1,729 @@
+﻿@model Resume_Builder.Models.ResumeModel
+
+@{
+    ViewData["Title"] = "Languages";
+}
+
+<style>
+    :root {
+        --primary: #7C3AED;
+        --primary-light: #a78bfa;
+        --bg: #F1F5F9;
+        --card-bg: #ffffff;
+        --text-dark: #1E293B;
+        --text-muted: #64748B;
+        --border: #E2E8F0;
+        --shadow: 0 4px 24px rgba(124,58,237,0.07);
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .top-header {
+        height: 56px;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .brand-icon {
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 15px;
+    }
+
+    .brand-text h6 {
+        margin: 0;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 1rem;
+    }
+
+    .brand-text p {
+        margin: 0;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+    }
+
+    .main-layout {
+        display: flex;
+        height: calc(100vh - 56px);
+        margin-top: 56px;
+    }
+
+    .left-panel {
+        width: 48%;
+        background: var(--bg);
+        overflow-y: auto;
+        padding: 24px;
+        border-right: 1px solid var(--border);
+    }
+
+    .steps-bar {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 24px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .step-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+
+        .step-circle.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .step-circle.done {
+            background: #10B981;
+            border-color: #10B981;
+            color: #fff;
+        }
+
+    .step-label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        white-space: nowrap;
+    }
+
+        .step-label.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+    .step-line {
+        width: 28px;
+        height: 2px;
+        background: var(--border);
+        margin-bottom: 18px;
+        flex-shrink: 0;
+    }
+
+    .form-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+        margin-bottom: 16px;
+    }
+
+        .form-card h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-size: 1.2rem;
+        }
+
+        .form-card .subtitle {
+            color: var(--text-muted);
+            font-size: 0.83rem;
+            margin-bottom: 22px;
+        }
+
+    .form-label {
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--text-dark);
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .form-control {
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 9px 12px;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+        width: 100%;
+        transition: border-color 0.2s;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+            outline: none;
+        }
+
+    .lang-entry {
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
+        background: #FAFAFA;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .lang-entry-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #EDE9FE;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.78rem;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .lang-inputs {
+        display: flex;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .btn-remove {
+        background: #FEE2E2;
+        color: #EF4444;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .btn-add-entry {
+        width: 100%;
+        padding: 11px;
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--primary);
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: border-color 0.2s;
+        margin-bottom: 20px;
+    }
+
+        .btn-add-entry:hover {
+            border-color: var(--primary);
+        }
+
+    .proficiency-select {
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 9px 12px;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+        font-family: 'DM Sans', sans-serif;
+        background: #fff;
+        min-width: 130px;
+    }
+
+        .proficiency-select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+    .bottom-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    .step-progress {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+    }
+
+        .step-progress span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+    .btn-next {
+        padding: 10px 28px;
+        background: linear-gradient(135deg, var(--primary), #A855F7);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+    }
+
+    .btn-back-sm {
+        padding: 10px 20px;
+        background: #fff;
+        color: var(--text-dark);
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .right-panel {
+        width: 52%;
+        background: #E8EDF5;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .preview-topbar {
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .preview-topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-dark);
+    }
+
+        .preview-topbar-left i {
+            color: var(--primary);
+        }
+
+    .zoom-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+    }
+
+    .zoom-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .resume-paper-wrap {
+        padding: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .resume-paper {
+        background: #fff;
+        width: 100%;
+        max-width: 600px;
+        min-height: 800px;
+        border-radius: 4px;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+        padding: 40px 44px;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .rv-name {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #1E293B;
+    }
+
+    .rv-title {
+        font-size: 0.95rem;
+        color: var(--primary);
+        font-weight: 500;
+        margin-top: 2px;
+    }
+
+    .rv-contacts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 2px solid var(--primary);
+    }
+
+    .rv-contact-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+    }
+
+        .rv-contact-item i {
+            color: var(--primary);
+            font-size: 11px;
+        }
+
+    .rv-section {
+        margin-top: 20px;
+    }
+
+    .rv-section-title {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #EDE9FE;
+    }
+
+    .rv-lang-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .rv-lang-item {
+        background: #F8FAFC;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 80px;
+    }
+
+    .rv-lang-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #1E293B;
+    }
+
+    .rv-lang-prof {
+        font-size: 0.7rem;
+        color: var(--primary);
+        margin-top: 2px;
+    }
+
+    .rv-placeholder {
+        font-size: 0.8rem;
+        color: #CBD5E1;
+        font-style: italic;
+    }
+
+    .rv-skills-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .rv-skill-tag {
+        background: #EDE9FE;
+        color: var(--primary);
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+</style>
+
+<header class="top-header">
+    <div class="brand">
+        <div class="brand-icon"><i class="fa-solid fa-address-card"></i></div>
+        <div class="brand-text">
+            <h6>Resume Builder</h6>
+            <p>Step 7 of 8 — Languages</p>
+        </div>
+    </div>
+    <a asp-controller="Home" asp-action="Index" class="btn-back-sm">
+        <i class="fa-solid fa-arrow-left"></i> Home
+    </a>
+</header>
+
+<div class="main-layout">
+
+    <!-- LEFT: FORM -->
+    <div class="left-panel">
+
+        <div class="steps-bar">
+            <div class="step-item"><div class="step-circle done"><i class="fa-solid fa-check" style="font-size:10px"></i></div><span class="step-label">Personal</span></div>
+            <div class="step-line"></div>
+            <div class="step-item"><div class="step-circle done"><i class="fa-solid fa-check" style="font-size:10px"></i></div><span class="step-label">Experience</span></div>
+            <div class="step-line"></div>
+            <div class="step-item"><div class="step-circle done"><i class="fa-solid fa-check" style="font-size:10px"></i></div><span class="step-label">Education</span></div>
+            <div class="step-line"></div>
+            <div class="step-item"><div class="step-circle done"><i class="fa-solid fa-check" style="font-size:10px"></i></div><span class="step-label">Skills</span></div>
+            <div class="step-line"></div>
+            <div class="step-item"><div class="step-circle done"><i class="fa-solid fa-check" style="font-size:10px"></i></div><span class="step-label">Projects</span></div>
+            <div class="step-line"></div>
+            <div class="step-item"><div class="step-circle done"><i class="fa-solid fa-check" style="font-size:10px"></i></div><span class="step-label">Certifications</span></div>
+            <div class="step-line"></div>
+            <div class="step-item"><div class="step-circle active">7</div><span class="step-label active">Languages</span></div>
+            <div class="step-line"></div>
+            <div class="step-item"><div class="step-circle">8</div><span class="step-label">Template</span></div>
+        </div>
+
+        <form asp-controller="Resume" asp-action="SaveLanguages" method="post">
+
+            <div class="form-card">
+                <h4><i class="fa-solid fa-language me-2" style="color:var(--primary)"></i>Languages</h4>
+                <p class="subtitle">Add languages you speak and your proficiency level.</p>
+
+                <div id="langEntries">
+                    <div class="lang-entry" id="lang_0">
+                        <div class="lang-entry-num">1</div>
+                        <div class="lang-inputs">
+                            <input type="text" name="Languages[0].Name"
+                                   class="form-control"
+                                   placeholder="e.g. English"
+                                   oninput="liveUpdate()" />
+                            <select name="Languages[0].Proficiency"
+                                    class="proficiency-select"
+                                    onchange="liveUpdate()">
+                                <option value="Native">Native</option>
+                                <option value="Fluent">Fluent</option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Basic">Basic</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn-remove" onclick="removeLang(0)">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-add-entry" onclick="addLang()">
+                    <i class="fa-solid fa-plus"></i> Add Another Language
+                </button>
+
+                <div class="bottom-bar">
+                    <a asp-controller="Resume" asp-action="Certifications" class="btn-back-sm">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </a>
+                    <div class="step-progress">Step <span>7</span> of <span>8</span></div>
+                    <button type="submit" class="btn-next">
+                        Next <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+
+    <!-- RIGHT: PREVIEW -->
+    <div class="right-panel">
+        <div class="preview-topbar">
+            <div class="preview-topbar-left">
+                <i class="fa-regular fa-eye"></i>
+                Resume Preview — Modern Professional
+            </div>
+            <div class="zoom-controls">
+                <button class="zoom-btn">−</button>
+                <span>100%</span>
+                <button class="zoom-btn">+</button>
+            </div>
+        </div>
+
+        <div class="resume-paper-wrap">
+            <div class="resume-paper">
+
+                <div class="rv-name">@Model.Personal.FullName</div>
+                <div class="rv-title">@Model.Personal.ProfessionalTitle</div>
+                <div class="rv-contacts">
+                    @if (!string.IsNullOrEmpty(Model.Personal.Email))
+                    {
+                        <span class="rv-contact-item"><i class="fa-regular fa-envelope"></i> @Model.Personal.Email</span>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Personal.Phone))
+                    {
+                        <span class="rv-contact-item"><i class="fa-solid fa-phone"></i> @Model.Personal.Phone</span>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Personal.Location))
+                    {
+                        <span class="rv-contact-item"><i class="fa-solid fa-location-dot"></i> @Model.Personal.Location</span>
+                    }
+                </div>
+
+                @if (Model.Skills.Any())
+                {
+                    <div class="rv-section">
+                        <div class="rv-section-title">Skills</div>
+                        <div class="rv-skills-wrap">
+                            @foreach (var skill in Model.Skills)
+                            {
+                                <span class="rv-skill-tag">@skill</span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (Model.Certifications.Any())
+                {
+                    <div class="rv-section">
+                        <div class="rv-section-title">Certifications</div>
+                        @foreach (var cert in Model.Certifications)
+                        {
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                                <div>
+                                    <div style="font-size:0.88rem;font-weight:600;color:#1E293B;">@cert.Name</div>
+                                    <div style="font-size:0.78rem;color:var(--primary);">@cert.IssuedBy</div>
+                                </div>
+                                <div style="font-size:0.75rem;color:var(--text-muted);">@cert.Year</div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <!-- Languages live preview -->
+                <div class="rv-section">
+                    <div class="rv-section-title">Languages</div>
+                    <div class="rv-lang-list" id="rv_lang_list">
+                        <span class="rv-placeholder">Your languages will appear here as you type...</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function liveUpdate() {
+            var entries = document.querySelectorAll('.lang-entry');
+            var html = '';
+            entries.forEach(function(entry) {
+                var name = entry.querySelector('input[name*="Name"]').value;
+                var prof = entry.querySelector('select').value;
+                if (name) {
+                    html += '<div class="rv-lang-item">';
+                    html += '<div class="rv-lang-name">' + name + '</div>';
+                    html += '<div class="rv-lang-prof">' + prof + '</div>';
+                    html += '</div>';
+                }
+            });
+            document.getElementById('rv_lang_list').innerHTML = html ||
+                '<span class="rv-placeholder">Your languages will appear here as you type...</span>';
+        }
+
+        function reindexLang() {
+            var entries = document.querySelectorAll('.lang-entry');
+            entries.forEach(function(entry, i) {
+                entry.id = 'lang_' + i;
+                entry.querySelector('.lang-entry-num').textContent = i + 1;
+                entry.querySelector('.btn-remove').setAttribute('onclick', 'removeLang(' + i + ')');
+                entry.querySelectorAll('input, select').forEach(function(el) {
+                    if (el.name) el.name = el.name.replace(/\[\d+\]/, '[' + i + ']');
+                });
+            });
+        }
+
+        function addLang() {
+            var i = document.querySelectorAll('.lang-entry').length;
+            var html = '<div class="lang-entry" id="lang_' + i + '">';
+            html += '<div class="lang-entry-num">' + (i + 1) + '</div>';
+            html += '<div class="lang-inputs">';
+            html += '<input type="text" name="Languages[' + i + '].Name" class="form-control" placeholder="e.g. Hindi" oninput="liveUpdate()" />';
+            html += '<select name="Languages[' + i + '].Proficiency" class="proficiency-select" onchange="liveUpdate()">';
+            html += '<option value="Native">Native</option>';
+            html += '<option value="Fluent" selected>Fluent</option>';
+            html += '<option value="Advanced">Advanced</option>';
+            html += '<option value="Intermediate">Intermediate</option>';
+            html += '<option value="Basic">Basic</option>';
+            html += '</select></div>';
+            html += '<button type="button" class="btn-remove" onclick="removeLang(' + i + ')"><i class="fa-solid fa-trash"></i></button>';
+            html += '</div>';
+            document.getElementById('langEntries').insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeLang(i) {
+            var el = document.getElementById('lang_' + i);
+            if (el) { el.remove(); reindexLang(); liveUpdate(); }
+        }
+
+                window.onload = function() {
+            var savedLangs = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Languages ?? new List<Resume_Builder.Models.Language>()));
+
+            if (savedLangs && savedLangs.length > 0) {
+                document.getElementById('langEntries').innerHTML = '';
+                savedLangs.forEach(function(lang, i) {
+                    addLang();
+                    var entry = document.getElementById('lang_' + i);
+                    entry.querySelector('input[name*="Name"]').value = lang.Name || '';
+                    entry.querySelector('select').value = lang.Proficiency || 'Fluent';
+                });
+                liveUpdate();
+            }
+        }
+    </script>
+}

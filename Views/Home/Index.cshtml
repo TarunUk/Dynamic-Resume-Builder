@@ -1,0 +1,173 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    :root {
+      --primary: #7C3AED;
+      --primary-light: #a78bfa;
+      --accent-teal: #0D9488;
+      --accent-amber: #D97706;
+      --bg: #F1F5F9;
+      --card-bg: #ffffff;
+      --text-dark: #1E293B;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --shadow: 0 4px 24px rgba(124,58,237,0.07);
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
+    .app-header {
+        background: #fff; border-bottom: 1px solid var(--border);
+        padding: 14px 32px; display: flex;
+        align-items: center; justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon {
+        width: 40px; height: 40px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        border-radius: 10px; display: flex;
+        align-items: center; justify-content: center;
+        color: #fff; font-size: 18px;
+    }
+    .brand-text h6 {
+        margin: 0; font-family: 'Playfair Display', serif;
+        font-weight: 700; color: var(--primary); font-size: 1.05rem;
+    }
+    .brand-text p { margin: 0; font-size: 0.72rem; color: var(--text-muted); }
+    .header-avatar {
+        width: 36px; height: 36px; border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-weight: 600; font-size: 0.85rem;
+    }
+    .modal-wrap { max-width: 860px; margin: 48px auto; padding: 0 16px; }
+    .modal-card {
+        background: var(--card-bg); border-radius: 20px;
+        box-shadow: var(--shadow); overflow: hidden;
+    }
+    .features-row {
+        display: grid; grid-template-columns: repeat(4, 1fr);
+        gap: 0; padding: 32px 32px 24px;
+    }
+    .feat-card {
+        border: 1px solid var(--border); border-radius: 14px;
+        padding: 28px 20px 22px; text-align: center; margin: 6px;
+        transition: box-shadow 0.2s, transform 0.2s; background: #fff;
+    }
+    .feat-card:hover {
+        box-shadow: 0 8px 28px rgba(124,58,237,0.11);
+        transform: translateY(-3px);
+    }
+    .feat-icon {
+        width: 56px; height: 56px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 14px; font-size: 22px;
+    }
+    .icon-purple { background: #EDE9FE; color: var(--primary); }
+    .icon-violet { background: #F3E8FF; color: #9333EA; }
+    .icon-teal   { background: #CCFBF1; color: var(--accent-teal); }
+    .icon-amber  { background: #FEF3C7; color: var(--accent-amber); }
+    .feat-card h6 { font-weight: 600; font-size: 0.92rem; color: var(--text-dark); margin-bottom: 6px; }
+    .feat-card p  { font-size: 0.78rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
+    .how-section {
+        background: #F8FAFC; border-top: 1px solid var(--border);
+        padding: 28px 40px 32px;
+    }
+    .how-title {
+        display: flex; align-items: center; gap: 9px;
+        font-weight: 700; font-size: 1rem;
+        color: var(--text-dark); margin-bottom: 18px;
+    }
+    .how-title .bulb {
+        width: 30px; height: 30px; background: #FEF3C7;
+        border-radius: 50%; display: flex; align-items: center;
+        justify-content: center; color: var(--accent-amber); font-size: 14px;
+    }
+    .step-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 13px; }
+    .step-list li { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; color: var(--text-dark); }
+    .step-check {
+        width: 24px; height: 24px; border-radius: 50%;
+        border: 2px solid var(--accent-teal);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--accent-teal); font-size: 11px; flex-shrink: 0;
+    }
+    .modal-footer-bar {
+        border-top: 1px solid var(--border); padding: 20px 32px;
+        display: flex; justify-content: flex-end; gap: 12px; align-items: center;
+    }
+    .btn-close-custom {
+        padding: 10px 26px; border: 1.5px solid var(--border);
+        border-radius: 10px; background: #fff;
+        color: var(--text-dark); font-size: 0.88rem;
+        font-weight: 500; cursor: pointer;
+    }
+    .btn-start {
+        padding: 11px 28px; border: none; border-radius: 10px;
+        background: linear-gradient(135deg, var(--primary) 0%, #A855F7 100%);
+        color: #fff; font-size: 0.88rem; font-weight: 600;
+        cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+        box-shadow: 0 4px 18px rgba(124,58,237,0.35); text-decoration: none;
+    }
+</style>
+
+<header class="app-header">
+    <div class="brand">
+        <div class="brand-icon"><i class="fa-solid fa-address-card"></i></div>
+        <div class="brand-text">
+            <h6>Resume Builder</h6>
+            <p>Build your professional resume</p>
+        </div>
+    </div>
+    <div class="header-avatar">RB</div>
+</header>
+
+<div class="modal-wrap">
+    <div class="modal-card">
+
+        <div class="features-row">
+            <div class="feat-card">
+                <div class="feat-icon icon-purple"><i class="fa-solid fa-list-check"></i></div>
+                <h6>Step-by-Step</h6>
+                <p>Guided process to build your perfect resume</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon icon-violet"><i class="fa-solid fa-palette"></i></div>
+                <h6>15 Templates</h6>
+                <p>Professional templates for every industry</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon icon-teal"><i class="fa-solid fa-robot"></i></div>
+                <h6>AI Enhanced</h6>
+                <p>AI suggestions to improve your content</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon icon-amber"><i class="fa-regular fa-file-arrow-down"></i></div>
+                <h6>Multi-Format</h6>
+                <p>Download as PDF or HTML</p>
+            </div>
+        </div>
+
+        <div class="how-section">
+            <div class="how-title">
+                <span class="bulb"><i class="fa-regular fa-lightbulb"></i></span>
+                How It Works
+            </div>
+            <ul class="step-list">
+                <li><span class="step-check"><i class="fa-solid fa-check"></i></span> Fill out each section step by step</li>
+                <li><span class="step-check"><i class="fa-solid fa-check"></i></span> Choose from 15 professional resume templates</li>
+                <li><span class="step-check"><i class="fa-solid fa-check"></i></span> Get AI-powered suggestions to enhance your content</li>
+                <li><span class="step-check"><i class="fa-solid fa-check"></i></span> Preview your resume in real-time</li>
+                <li><span class="step-check"><i class="fa-solid fa-check"></i></span> Download as PDF or HTML when ready</li>
+            </ul>
+        </div>
+
+        <div class="modal-footer-bar">
+            <button class="btn-close-custom">Close</button>
+            <a asp-controller="Resume" asp-action="Build" class="btn-start">
+                <i class="fa-solid fa-rocket"></i>
+                Start Building Resume
+            </a>
+        </div>
+
+    </div>
+</div>

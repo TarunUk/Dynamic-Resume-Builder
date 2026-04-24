@@ -1,0 +1,825 @@
+﻿@model Resume_Builder.Models.ResumeModel
+
+@{
+    ViewData["Title"] = "Build Resume";
+}
+
+<style>
+    :root {
+        --primary: #7C3AED;
+        --primary-light: #a78bfa;
+        --bg: #F1F5F9;
+        --card-bg: #ffffff;
+        --text-dark: #1E293B;
+        --text-muted: #64748B;
+        --border: #E2E8F0;
+        --shadow: 0 4px 24px rgba(124,58,237,0.07);
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    /* TOP HEADER */
+    .top-header {
+        height: 56px;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .brand-icon {
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 15px;
+    }
+
+    .brand-text h6 {
+        margin: 0;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 1rem;
+    }
+
+    .brand-text p {
+        margin: 0;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+    }
+
+    /* MAIN SPLIT LAYOUT */
+    .main-layout {
+        display: flex;
+        height: calc(100vh - 56px);
+        margin-top: 56px;
+    }
+
+    /* LEFT PANEL — FORM */
+    .left-panel {
+        width: 48%;
+        background: var(--bg);
+        overflow-y: auto;
+        padding: 24px;
+        border-right: 1px solid var(--border);
+    }
+
+    /* Step indicator */
+    .steps-bar {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 24px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .step-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+
+        .step-circle.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .step-circle.done {
+            background: #10B981;
+            border-color: #10B981;
+            color: #fff;
+        }
+
+    .step-label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        white-space: nowrap;
+    }
+
+        .step-label.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+    .step-line {
+        width: 28px;
+        height: 2px;
+        background: var(--border);
+        margin-bottom: 18px;
+        flex-shrink: 0;
+    }
+
+    /* Form card */
+    .form-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+    }
+
+        .form-card h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-size: 1.2rem;
+        }
+
+        .form-card .subtitle {
+            color: var(--text-muted);
+            font-size: 0.83rem;
+            margin-bottom: 22px;
+        }
+
+    .form-label {
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--text-dark);
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .form-control {
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 9px 12px;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+        width: 100%;
+        transition: border-color 0.2s;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+            outline: none;
+        }
+
+    /* Photo upload */
+    .photo-upload-box {
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+        .photo-upload-box:hover {
+            border-color: var(--primary);
+        }
+
+        .photo-upload-box input[type=file] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    .photo-preview {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 10px;
+        display: none;
+        border: 3px solid var(--primary);
+    }
+
+    .upload-icon {
+        font-size: 28px;
+        color: var(--primary);
+        margin-bottom: 8px;
+    }
+
+    .upload-text {
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: var(--text-dark);
+    }
+
+    .upload-hint {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+
+    .upload-badge {
+        display: inline-block;
+        background: #F1F5F9;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 8px;
+    }
+
+    /* Summary area */
+    .summary-wrap {
+        position: relative;
+    }
+
+    .word-count {
+        position: absolute;
+        bottom: 10px;
+        right: 12px;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+    }
+
+    .btn-ai {
+        padding: 7px 16px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #7C3AED, #A855F7);
+        color: #fff;
+        border: none;
+        font-size: 0.78rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Bottom bar */
+    .bottom-bar {
+        margin-top: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .step-progress {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+    }
+
+        .step-progress span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+    .btn-next {
+        padding: 10px 28px;
+        background: linear-gradient(135deg, var(--primary), #A855F7);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+    }
+
+    .btn-back-sm {
+        padding: 10px 20px;
+        background: #fff;
+        color: var(--text-dark);
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* RIGHT PANEL — PREVIEW */
+    .right-panel {
+        width: 52%;
+        background: #E8EDF5;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .preview-topbar {
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .preview-topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-dark);
+    }
+
+        .preview-topbar-left i {
+            color: var(--primary);
+        }
+
+    .zoom-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+    }
+
+    .zoom-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: var(--text-dark);
+    }
+
+    /* Resume paper */
+    .resume-paper-wrap {
+        padding: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .resume-paper {
+        background: #fff;
+        width: 100%;
+        max-width: 600px;
+        min-height: 800px;
+        border-radius: 4px;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+        padding: 40px 44px;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* Resume content styles */
+    .rv-header {
+        margin-bottom: 20px;
+    }
+
+    .rv-photo-name {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 8px;
+    }
+
+    .rv-photo {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary);
+        display: none;
+    }
+
+    .rv-name {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #1E293B;
+        line-height: 1.2;
+    }
+
+    .rv-title {
+        font-size: 0.95rem;
+        color: var(--primary);
+        font-weight: 500;
+        margin-top: 2px;
+    }
+
+    .rv-contacts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 2px solid var(--primary);
+    }
+
+    .rv-contact-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+    }
+
+        .rv-contact-item i {
+            color: var(--primary);
+            font-size: 11px;
+        }
+
+    .rv-section {
+        margin-top: 20px;
+    }
+
+    .rv-section-title {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #EDE9FE;
+    }
+
+    .rv-summary {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+    }
+
+    .rv-placeholder {
+        font-size: 0.8rem;
+        color: #CBD5E1;
+        font-style: italic;
+    }
+
+    .row {
+        display: flex;
+        gap: 12px;
+    }
+
+    .col-6 {
+        flex: 1;
+    }
+
+    .mb-3 {
+        margin-bottom: 12px;
+    }
+
+    .mt-2 {
+        margin-top: 8px;
+    }
+
+    .d-flex {
+        display: flex;
+    }
+
+    .align-items-center {
+        align-items: center;
+    }
+
+    .gap-2 {
+        gap: 8px;
+    }
+
+    .justify-content-between {
+        justify-content: space-between;
+    }
+</style>
+
+<!-- Top Header -->
+<header class="top-header">
+    <div class="brand">
+        <div class="brand-icon"><i class="fa-solid fa-address-card"></i></div>
+        <div class="brand-text">
+            <h6>Resume Builder</h6>
+            <p>Build your professional resume</p>
+        </div>
+    </div>
+    <a asp-controller="Home" asp-action="Index" class="btn-back-sm">
+        <i class="fa-solid fa-arrow-left"></i> Home
+    </a>
+</header>
+
+<!-- Main Split Layout -->
+<div class="main-layout">
+
+    <!-- LEFT: FORM -->
+    <div class="left-panel">
+
+        <!-- Steps Bar -->
+        <div class="steps-bar">
+            <div class="step-item">
+                <div class="step-circle active">1</div>
+                <span class="step-label active">Personal</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle">2</div>
+                <span class="step-label">Experience</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle">3</div>
+                <span class="step-label">Education</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle">4</div>
+                <span class="step-label">Skills</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle">5</div>
+                <span class="step-label">Projects</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle">6</div>
+                <span class="step-label">Certifications</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle">7</div>
+                <span class="step-label">Languages</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle">8</div>
+                <span class="step-label">Template</span>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <h4><i class="fa-solid fa-user me-2" style="color:var(--primary)"></i>Personal Information</h4>
+            <p class="subtitle">Basic contact details and professional summary</p>
+
+            <form asp-controller="Resume" asp-action="SavePersonal" method="post" id="personalForm">
+
+                <!-- Photo Upload -->
+                <div class="photo-upload-box" id="photoBox">
+                    <input type="file" id="photoInput" accept="image/*" onchange="handlePhoto(this)" />
+                    <img id="photoPreview" class="photo-preview" src="" alt="Preview" />
+                    <div id="uploadPlaceholder">
+                        <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                        <div class="upload-text">Upload your photo</div>
+                        <div class="upload-hint">Drag & drop or click to browse</div>
+                        <div class="upload-badge">JPG, PNG, GIF • Max 10MB</div>
+                    </div>
+                    <p style="font-size:0.72rem;color:var(--text-muted);margin-top:8px;">
+                        Upload a square photo for best results.
+                    </p>
+                </div>
+                <input type="hidden" name="ProfilePhotoBase64" id="photoBase64" value="@Model.Personal.ProfilePhotoBase64" />
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" name="FullName" id="inp_name"
+                               value="@Model.Personal.FullName"
+                               class="form-control" placeholder="e.g. John Doe"
+                               oninput="liveUpdate()" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Professional Title</label>
+                        <input type="text" name="ProfessionalTitle" id="inp_title"
+                               value="@Model.Personal.ProfessionalTitle"
+                               class="form-control" placeholder="e.g. Software Engineer"
+                               oninput="liveUpdate()" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" name="Email" id="inp_email"
+                               value="@Model.Personal.Email"
+                               class="form-control" placeholder="e.g. john@email.com"
+                               oninput="liveUpdate()" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Phone Number *</label>
+                        <input type="text" name="Phone" id="inp_phone"
+                               value="@Model.Personal.Phone"
+                               class="form-control" placeholder="e.g. +91 98765 43210"
+                               oninput="liveUpdate()" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Location</label>
+                        <input type="text" name="Location" id="inp_location"
+                               value="@Model.Personal.Location"
+                               class="form-control" placeholder="e.g. Ludhiana, Punjab"
+                               oninput="liveUpdate()" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">LinkedIn Profile</label>
+                        <input type="text" name="LinkedIn" id="inp_linkedin"
+                               value="@Model.Personal.LinkedIn"
+                               class="form-control" placeholder="linkedin.com/in/yourname"
+                               oninput="liveUpdate()" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <label class="form-label" style="margin:0">Professional Summary *</label>
+                        <button type="button" class="btn-ai">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Enhance
+                        </button>
+                    </div>
+                    <div class="summary-wrap">
+                        <textarea name="Summary" id="inp_summary" class="form-control"
+                                  rows="4" oninput="liveUpdate(); countWords(this)"
+                                  placeholder="Write a compelling professional summary...">@Model.Personal.Summary</textarea>
+                        <span class="word-count" id="wordCount">0 / 200 words</span>
+                    </div>
+                </div>
+
+                <!-- Bottom Bar -->
+                <div class="bottom-bar">
+                    <div class="step-progress">
+                        Step <span>1</span> of <span>8</span> &nbsp;•&nbsp; Required • 0% Complete
+                    </div>
+                    <button type="submit" class="btn-next">
+                        Next <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- RIGHT: PREVIEW -->
+    <div class="right-panel">
+        <div class="preview-topbar">
+            <div class="preview-topbar-left">
+                <i class="fa-regular fa-eye"></i>
+                Resume Preview — Modern Professional
+            </div>
+            <div class="zoom-controls">
+                <button class="zoom-btn">−</button>
+                <span>100%</span>
+                <button class="zoom-btn">+</button>
+            </div>
+        </div>
+
+        <div class="resume-paper-wrap">
+            <div class="resume-paper">
+
+                <!-- Resume Header -->
+                <div class="rv-header">
+                    <div class="rv-photo-name">
+                        <img id="rv_photo" class="rv-photo" src="" alt="" />
+                        <div>
+                            <div class="rv-name" id="rv_name">Your Name</div>
+                            <div class="rv-title" id="rv_title">Professional Title</div>
+                        </div>
+                    </div>
+                    <div class="rv-contacts">
+                        <span class="rv-contact-item" id="rv_email_wrap">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span id="rv_email">email@example.com</span>
+                        </span>
+                        <span class="rv-contact-item" id="rv_phone_wrap">
+                            <i class="fa-solid fa-phone"></i>
+                            <span id="rv_phone">+00 00000 00000</span>
+                        </span>
+                        <span class="rv-contact-item" id="rv_location_wrap">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span id="rv_location">City, Country</span>
+                        </span>
+                        <span class="rv-contact-item" id="rv_linkedin_wrap">
+                            <i class="fa-brands fa-linkedin"></i>
+                            <span id="rv_linkedin">linkedin.com/in/yourname</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Summary Section -->
+                <div class="rv-section">
+                    <div class="rv-section-title">Professional Summary</div>
+                    <div class="rv-summary" id="rv_summary">
+                        <span class="rv-placeholder">Write your professional summary here...</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        // Live update preview as user types
+        function liveUpdate() {
+            var name = document.getElementById('inp_name').value;
+            var title = document.getElementById('inp_title').value;
+            var email = document.getElementById('inp_email').value;
+            var phone = document.getElementById('inp_phone').value;
+            var location = document.getElementById('inp_location').value;
+            var linkedin = document.getElementById('inp_linkedin').value;
+            var summary = document.getElementById('inp_summary').value;
+
+            document.getElementById('rv_name').textContent = name || 'Your Name';
+            document.getElementById('rv_title').textContent = title || 'Professional Title';
+            document.getElementById('rv_email').textContent = email || 'email@example.com';
+            document.getElementById('rv_phone').textContent = phone || '+00 00000 00000';
+            document.getElementById('rv_location').textContent = location || 'City, Country';
+            document.getElementById('rv_linkedin').textContent = linkedin || 'linkedin.com/in/yourname';
+
+            var summaryEl = document.getElementById('rv_summary');
+            if (summary.trim()) {
+                summaryEl.innerHTML = summary;
+            } else {
+                summaryEl.innerHTML = '<span class="rv-placeholder">Write your professional summary here...</span>';
+            }
+        }
+
+        // Word counter
+        function countWords(el) {
+            var words = el.value.trim() === '' ? 0 : el.value.trim().split(/\s+/).length;
+            document.getElementById('wordCount').textContent = words + ' / 200 words';
+        }
+
+        // Photo upload handler
+        function handlePhoto(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var base64 = e.target.result;
+                    document.getElementById('photoBase64').value = base64;
+                    document.getElementById('photoPreview').src = base64;
+                    document.getElementById('photoPreview').style.display = 'block';
+                    document.getElementById('uploadPlaceholder').style.display = 'none';
+                    document.getElementById('rv_photo').src = base64;
+                    document.getElementById('rv_photo').style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Load existing data on page load
+        window.onload = function() {
+            liveUpdate();
+            var summary = document.getElementById('inp_summary');
+            if (summary.value) countWords(summary);
+
+            var existingPhoto = document.getElementById('photoBase64').value;
+            if (existingPhoto) {
+                document.getElementById('photoPreview').src = existingPhoto;
+                document.getElementById('photoPreview').style.display = 'block';
+                document.getElementById('uploadPlaceholder').style.display = 'none';
+                document.getElementById('rv_photo').src = existingPhoto;
+                document.getElementById('rv_photo').style.display = 'block';
+            }
+        }
+    </script>
+}
